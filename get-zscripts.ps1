@@ -21,7 +21,8 @@ $DLlist = Compare-Object $apple $orage -PassThru | Where-Object {$_.SideIndicato
     foreach ($item in $DLlist) {
         $test =  "$repository" + "$item"
         $WebClient = New-Object System.Net.WebClient
-	$WebClient.DownloadFile("$test","c:\temp\test.txt")  #"$path + $item"
+	$WebClient.DownloadFile("$test","$path")  #"$path + $item"
+    write-host $test
     }
    # catch [System.Net.WebException],[System.IO.IOException] {        "An error occurred. Files were not downloaded."   }
 
