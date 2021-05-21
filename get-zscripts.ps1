@@ -6,15 +6,23 @@
 #$cert = Get-PfxCertificate -FilePath C:\Test\Mysign.pfx
 #Set-AuthenticodeSignature -FilePath ServerProps.ps1 -Certificate $cert
 
-$path = "C:\Program Files\Zabbix Agent 2\Scripts"
-$repository = "https://lalla.com/repo"
+$path = "C:\Program Files\Zabbix Agent 2\Scripts\"
+$repository =  "https://raw.githubusercontent.com/AndryAn3/Zabbix/main/"
+If(!(test-path $path)){ New-Item -ItemType Directory -Force -Path $path }
 remove-item -Path "$path\ps.xlm" -Force -Confirm:$false  
 gci $path | % { $_.name } >> "$path\ps.xlm"
 #Get-AuthenticodeSignature -FilePath $Env:TEMP\list.xxl
-$apple = get-content "C:\Program Files\Zabbix Agent 2\scripts\list.xxl"  #webaddress later
+$apple = Invoke-WebRequest "https://raw.githubusercontent.com/AndryAn3/Zabbix/main/list.xxl"  #webaddress later
 $orage = get-content "C:\Program Files\Zabbix Agent 2\scripts\ps.xlm"
+remove-item -path "$env:TEMP\lkjhhfgd.txt" -Force -Confirm:$false  
+$apple.content | Set-Content "$env:TEMP\lkjhhfgd.txt"
+$apple = get-Content "$env:TEMP\lkjhhfgd.txt"
 $DLlist = Compare-Object $apple $orage -PassThru | Where-Object {$_.SideIndicator -ne "=>"}
     foreach ($item in $DLlist) {
-        #$WebClient = New-Object System.Net.WebClient
-		write-host "$WebClient.DownloadFile("$repository/$item","$path\$item")"
+        $test =  "$repository" + "$item"
+        $WebClient = New-Object System.Net.WebClient
+	$WebClient.DownloadFile("$test","c:\temp\test.txt")  #"$path + $item"
     }
+   # catch [System.Net.WebException],[System.IO.IOException] {        "An error occurred. Files were not downloaded."   }
+
+   
