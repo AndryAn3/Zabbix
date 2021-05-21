@@ -2,4 +2,5 @@ get_apppool.ps1
 get_apppoolstate.ps1
 get_sites.ps1
 get_sitestate.ps1
+get-zscripts.ps1
 ps.xlm
