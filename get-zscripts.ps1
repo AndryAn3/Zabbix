@@ -9,21 +9,21 @@ try {
 $path = "C:\Program Files\Zabbix Agent 2\Scripts\"
 $repository =  "https://raw.githubusercontent.com/AndryAn3/Zabbix/main/"
 If(!(test-path $path)){ New-Item -ItemType Directory -Force -Path $path }
-remove-item -Path "$path\ps.xlm" -Force -Confirm:$false  
+If((test-path "$path\ps.xlm")) { remove-item -Path "$path\ps.xlm" -Force -Confirm:$false  }
 gci $path | % { $_.name } >> "$path\ps.xlm"
 #Get-AuthenticodeSignature -FilePath $Env:TEMP\list.xxl
 $apple = Invoke-WebRequest "https://raw.githubusercontent.com/AndryAn3/Zabbix/main/list.xxl" 
 $orage = get-content "C:\Program Files\Zabbix Agent 2\scripts\ps.xlm"
-remove-item -path "$env:TEMP\lkjhhfgd.txt" -Force -Confirm:$false  
 $apple.content | Set-Content "$env:TEMP\lkjhhfgd.txt"
 $apple = get-Content "$env:TEMP\lkjhhfgd.txt"
 $DLlist = Compare-Object $apple $orage -PassThru | Where-Object {$_.SideIndicator -ne "=>"}
+$downloaded = $null
     foreach ($item in $DLlist) {
         $test =  "$repository" + "$item"
         $xpath =  "$path" + "$item"
         $WebClient = New-Object System.Net.WebClient
     	$WebClient.DownloadFile("$test","$xpath")
-        $downloaded += "$item"
+        $downloaded += "$item +"
      }
 }
 catch {
@@ -31,7 +31,8 @@ catch {
 }
 Finally {
     remove-item -path "$env:TEMP\lkjhhfgd.txt" -Force -Confirm:$false  
-    remove-item -Path "$path\ps.xlm" -Force -Confirm:$false  
+    remove-item -Path "$path\ps.xlm" -Force -Confirm:$false 
+    write-host $downloaded
 }
 
    
