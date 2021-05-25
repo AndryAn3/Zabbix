@@ -5,9 +5,13 @@
 #$cert = Get-PfxCertificate -FilePath C:\Test\Mysign.pfx
 #Set-AuthenticodeSignature -FilePath ServerProps.ps1 -Certificate $cert
 try {
-$path = "C:\Program Files\Zabbix Agent 2\Scripts\"
+$exec = Get-ExecutionPolicy
+Set-ExecutionPolicy Bypass -Force -Confirm:$false
+$zabbixdir = Get-ItemProperty -Path "HKLM:\SOFTWARE\Zabbix SIA\Zabbix Agent 2 (64-bit)\"
+$zabbixdir2 = $zabbixdir.installfolder
+$path = "$zabbixdir2`Scripts\"
 $repository =  "https://raw.githubusercontent.com/AndryAn3/Zabbix/main/"
-$ZabbixConfig = "c:\program files\Zabbix Agent 2\zabbix_agent2.conf"
+$ZabbixConfig = "$zabbixdir2`zabbix_agent2.conf"
 $parameterlist = @'
 UserParameter=apppool.discovery,powershell -NoProfile -ExecutionPolicy Bypass -File "c:\program files\Zabbix Agent 2\Scripts\get_apppool.ps1"
 UserParameter=apppool.state[*],powershell -NoProfile -ExecutionPolicy Bypass -File "c:\program files\Zabbix Agent 2\Scripts\get_apppoolstate.ps1" "$1"
@@ -16,7 +20,6 @@ UserParameter=site.state[*],powershell -NoProfile -ExecutionPolicy Bypass -File 
 UserParameter=ps.run[*],powershell -NoProfile -ExecutionPolicy Bypass -File "c:\program files\Zabbix Agent 2\Scripts\run_script.ps1" "$1"
 UserParameter=ps.scripts[*],powershell -NoProfile -ExecutionPolicy Bypass -File "c:\program files\Zabbix Agent 2\Scripts\get-zscripts.ps1" "$1"
 '@
-$split = $parameterlist | select-string $item | % { $_.Line -split 'UserParameter='}
 If(!(test-path $path)){ New-Item -ItemType Directory -Force -Path $path }
 If((test-path "$path\ps.xlm")) { remove-item -Path "$path\ps.xlm" -Force -Confirm:$false  }
 gci $path | % { $_.name } >> "$path\ps.xlm"
@@ -28,6 +31,8 @@ $apple = get-Content "$env:TEMP\lkjhhfgd.txt"
 $DLlist = Compare-Object $apple $orage -PassThru | Where-Object {$_.SideIndicator -ne "=>"}
 $downloaded = $null
     foreach ($item in $DLlist) {
+        #write-host $item
+        $split = $parameterlist | select-string $item | % { $_.Line -split 'UserParameter='}
         $test =  "$repository" + "$item"
         $xpath =  "$path" + "$item"
         $string = $null
@@ -43,11 +48,31 @@ $downloaded = $null
            add-content -Path $ZabbixConfig -value "`n$bananassplits"
         }
 }
+#AGENT Upgrade PROCESS HERE# OR Seperate script (think preferred)
+<#
+$CheckInstalled = Get-WmiObject -Class Win32_Product | Where-Object {$_.Name -like "zabbix agent*"}
+$exe = "msiexec.exe"
+$Arguments = "/i $InstallLocation\$MSIFile HOSTNAME=$hostFQDN SERVER=$ZabbixServer SERVERACTIVE=$ZabbixServer ENABLEPATH=TRUE /qn" #LOGTYPE=system
+$AgentVersion = "5.2.5"
+    if ($null -ne $CheckInstalled -and $CheckInstalled.Version -lt $AgentVersion){
+    Start-Process -FilePath $exe -ArgumentList $Arguments -Wait
+    Restart-Service -Name 'Zabbix Agent 2'
+    }   #>
 }
 catch {
-    [System.Net.WebException],[System.IO.IOException] {        "An error occurred. Files were not downloaded."   }
+    If ($_.Exception.Response.StatusCode.value__) {
+        $crap = ($_.Exception.Response.StatusCode.value__ ).ToString().Trim();
+        Write-Output $crap;
+    }
+    If  ($_.Exception.Message) {
+        $crapMessage = ($_.Exception.Message).ToString().Trim();
+        Write-Output $crapMessage;
+    }
+ [System.Net.WebException] { "A NET error occurred. Files were not downloaded."   }
+ [System.IO.IOException] { "An IO error occurred. Files were not downloaded."   }
 }
 Finally {
+    Set-ExecutionPolicy $exec -Force -Confirm:$false
     remove-item -path "$env:TEMP\lkjhhfgd.txt" -Force -Confirm:$false  
     remove-item -Path "$path\ps.xlm" -Force -Confirm:$false 
     write-host $downloaded
