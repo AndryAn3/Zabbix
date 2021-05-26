@@ -6,4 +6,5 @@ get-zscripts.ps1
 get-raidbat.ps1
 get-raiddisks.ps1
 get-raidvdisks.ps1
+get-lastupdate.ps1
 ps.xlm
