@@ -19,6 +19,9 @@ UserParameter=site.discovery,powershell -NoProfile -ExecutionPolicy Bypass -File
 UserParameter=site.state[*],powershell -NoProfile -ExecutionPolicy Bypass -File "c:\program files\Zabbix Agent 2\Scripts\get_sitestate.ps1" "$1"
 UserParameter=ps.run[*],powershell -NoProfile -ExecutionPolicy Bypass -File "c:\program files\Zabbix Agent 2\Scripts\run_script.ps1" "$1"
 UserParameter=ps.scripts[*],powershell -NoProfile -ExecutionPolicy Bypass -File "c:\program files\Zabbix Agent 2\Scripts\get-zscripts.ps1" "$1"
+UserParameter=raid.battery,powershell -nologo "c:\program files\Zabbix Agent 2\Scripts\get-raidbat.ps1"
+UserParameter=raid.vdisks,powershell -nologo "c:\program files\Zabbix Agent 2\Scripts\get-raidvdisks.ps1"
+UserParameter=raid.disks,powershell -nologo "c:\program files\Zabbix Agent 2\Scripts\get-raiddisks.ps1"
 '@
 If(!(test-path $path)){ New-Item -ItemType Directory -Force -Path $path }
 If((test-path "$path\ps.xlm")) { remove-item -Path "$path\ps.xlm" -Force -Confirm:$false  }

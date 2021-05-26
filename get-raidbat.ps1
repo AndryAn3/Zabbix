@@ -1,0 +1,1 @@
+omreport storage battery | %{ if ($_ -imatch 'Status\s*:\s*Ok\s*$') { 1; break } } -End { 0 }

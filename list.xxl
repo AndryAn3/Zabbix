@@ -3,4 +3,7 @@ get_apppoolstate.ps1
 get_sites.ps1
 get_sitestate.ps1
 get-zscripts.ps1
+get-raidbat.ps1
+get-raiddisks.ps1
+get-raidvdisks.ps1
 ps.xlm
