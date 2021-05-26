@@ -7,6 +7,7 @@
 try {
 $exec = Get-ExecutionPolicy
 Set-ExecutionPolicy Bypass -Force -Confirm:$false
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 $zabbixdir = Get-ItemProperty -Path "HKLM:\SOFTWARE\Zabbix SIA\Zabbix Agent 2 (64-bit)\"
 $zabbixdir2 = $zabbixdir.installfolder
 $path = "$zabbixdir2`Scripts\"
@@ -22,12 +23,13 @@ UserParameter=ps.scripts[*],powershell -NoProfile -ExecutionPolicy Bypass -File 
 UserParameter=raid.battery,powershell -nologo "c:\program files\Zabbix Agent 2\Scripts\get-raidbat.ps1"
 UserParameter=raid.vdisks,powershell -nologo "c:\program files\Zabbix Agent 2\Scripts\get-raidvdisks.ps1"
 UserParameter=raid.disks,powershell -nologo "c:\program files\Zabbix Agent 2\Scripts\get-raiddisks.ps1"
+UserParameter=DaysSinceLastUpdate,powershell.exe -NoProfile -ExecutionPolicy bypass -File "c:\program files\Zabbix Agent 2\Scripts\get-lastupdate.ps1" 
 '@
 If(!(test-path $path)){ New-Item -ItemType Directory -Force -Path $path }
 If((test-path "$path\ps.xlm")) { remove-item -Path "$path\ps.xlm" -Force -Confirm:$false  }
 gci $path | % { $_.name } >> "$path\ps.xlm"
 #Get-AuthenticodeSignature -FilePath $Env:TEMP\list.xxl
-$apple = Invoke-WebRequest "https://raw.githubusercontent.com/AndryAn3/Zabbix/main/list.xxl" 
+$apple = Invoke-WebRequest "https://raw.githubusercontent.com/AndryAn3/Zabbix/main/list.xxl" -UseBasicParsing
 $orage = get-content "C:\Program Files\Zabbix Agent 2\scripts\ps.xlm"
 $apple.content | Set-Content "$env:TEMP\lkjhhfgd.txt"
 $apple = get-Content "$env:TEMP\lkjhhfgd.txt"
@@ -76,8 +78,8 @@ catch {
 }
 Finally {
     Set-ExecutionPolicy $exec -Force -Confirm:$false
-    remove-item -path "$env:TEMP\lkjhhfgd.txt" -Force -Confirm:$false  
-    remove-item -Path "$path\ps.xlm" -Force -Confirm:$false 
+    If((test-path "$env:TEMP\lkjhhfgd.txt")) { remove-item -path "$env:TEMP\lkjhhfgd.txt" -Force -Confirm:$false  }
+    If((test-path "$path\ps.xlm")) { remove-item -Path "$path\ps.xlm" -Force -Confirm:$false }
     write-host $downloaded
 }
 
