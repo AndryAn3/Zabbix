@@ -64,6 +64,7 @@ $AgentVersion = "5.2.5"
     Restart-Service -Name 'Zabbix Agent 2'
     }   #>
 }
+Restart-Service -Name "Zabbix Agent 2" -Force
 catch {
     If ($_.Exception.Response.StatusCode.value__) {
         $crap = ($_.Exception.Response.StatusCode.value__ ).ToString().Trim();
@@ -74,7 +75,7 @@ catch {
         Write-Output $crapMessage;
     }
  [System.Net.WebException] { "A NET error occurred. Files were not downloaded."   }
- [System.IO.IOException] { "An IO error occurred. Files were not downloaded."   }
+ [System.IO.IOException] { "An IO error occurred. Files were not saved."   }
 }
 Finally {
     Set-ExecutionPolicy $exec -Force -Confirm:$false
