@@ -20,8 +20,8 @@ if ($id.trim().StartsWith("#")) {
     elseif ([string]::IsNullOrEmpty($id)) {        add-content -Path "c:\program files\Zabbix Agent 2\$ZabbixConfig" -value "`n$iid"
     }
     #else {     write-host "ID is something else, or already done ofc $id"     }   safety checked
-    New-Item -Path "c:\program files\Zabbix Agent 2\psk.psk" -WarningAction SilentlyContinue -ErrorAction SilentlyContinue
-    Set-Content -Path "c:\program files\Zabbix Agent 2\psk.psk" -Value "$key"
+New-Item -Path "c:\program files\Zabbix Agent 2\psk.psk" -WarningAction SilentlyContinue -ErrorAction SilentlyContinue
+Set-Content -Path "c:\program files\Zabbix Agent 2\psk.psk" -Value "$key"
     #else {     write-host "Noooooooooo  keyvalue $pskey"    }  safety checked
 [string]$tlsa = $getfile | Select-String -pattern "TLSAccept="
 $tlsab = "TLSAccept=psk"
@@ -40,4 +40,4 @@ if ($tlsc.trim().StartsWith("#")) {
     elseif ([string]::IsNullOrEmpty($tlsc)) {
     add-content -Path "c:\program files\Zabbix Agent 2\$ZabbixConfig" -value "`n$tlsca"
 } 
-write-host "Use the following PSK Key for $hostFQDN: $key"
+write-host "Use the following PSK Key for $hostFQDN : $key  Zabbix service must still be restarted."
