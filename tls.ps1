@@ -35,4 +35,5 @@ if ($tlsc.trim().StartsWith("#")) {
     add-content -Path "c:\program files\Zabbix Agent 2\$ZabbixConfig" -value "`n$tlsca"
 } 
 write-host "Use the following PSK Key for the given host: $key"
+sleep -Seconds 10
 Restart-Service -Name 'Zabbix Agent 2'  -Force
