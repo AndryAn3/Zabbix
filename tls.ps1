@@ -40,4 +40,4 @@ if ($tlsc.trim().StartsWith("#")) {
     elseif ([string]::IsNullOrEmpty($tlsc)) {
     add-content -Path "c:\program files\Zabbix Agent 2\$ZabbixConfig" -value "`n$tlsca"
 } 
-write-host "Use the following PSK Key for the given host: $key"
+write-host "Use the following PSK Key for $hostFQDN: $key"
