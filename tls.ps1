@@ -39,4 +39,9 @@ if ($tlsc.trim().StartsWith("#")) {
     elseif ([string]::IsNullOrEmpty($tlsc)) {
     add-content -Path "c:\program files\Zabbix Agent 2\$ZabbixConfig" -value "`n$tlsca"
 } 
+[string]$pskfile = $getfile | Select-String -pattern "TLSPSKFile="
+$pskstr = "TLSPSKFile=C:\Program Files\Zabbix Agent 2\psk.psk"
+if ($pskfile.trim().StartsWith("#")) { 
+    $GetFile -replace $pskfile, $pskstr  |  Set-Content -Path "c:\program files\Zabbix Agent 2\$ZabbixConfig" 
+}
 write-host "Use the following PSK Key for $hostFQDN : $key  Zabbix service/host will need to be restarted."
