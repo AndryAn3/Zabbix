@@ -1,5 +1,5 @@
 ### Created by Andry: ‎vrijdag ‎16 ‎juli ‎2021, ‏‎13:37:32
-### last change ‎vrijdag ‎16 ‎juli ‎2021, ‏‎14:54:35 
+### 
 #$key = -join (((48..57)+(65..90)+(97..122)) * 80 |Get-Random -Count 32 |%{[char]$_})
 function Get-RandomHex {
     param(
@@ -22,7 +22,6 @@ if ($id.trim().StartsWith("#")) {
     #else {     write-host "ID is something else, or already done ofc $id"     }   safety checked
 New-Item -Path "c:\program files\Zabbix Agent 2\psk.psk" -WarningAction SilentlyContinue -ErrorAction SilentlyContinue
 Set-Content -Path "c:\program files\Zabbix Agent 2\psk.psk" -Value "$key"
-    #else {     write-host "Noooooooooo  keyvalue $pskey"    }  safety checked
 [string]$tlsa = $getfile | Select-String -pattern "TLSAccept="
 $tlsab = "TLSAccept=psk"
 if ($tlsa.trim().StartsWith("#")) { 
@@ -31,7 +30,7 @@ if ($tlsa.trim().StartsWith("#")) {
     elseif ([string]::IsNullOrEmpty($tlsa)) {
     add-content -Path "c:\program files\Zabbix Agent 2\$ZabbixConfig" -value "`n$tlsab"
 } 
-    #else {     write-host "Noooooooooo tlsaccept  $tlsa"    }
+    #else {     write-host "Noooooooooo tlsaccept  $tlsa"    }  safety checked
 [string]$tlsc = $getfile | Select-String -pattern "TLSConnect="
 $tlsca = "TLSConnect=psk"
 if ($tlsc.trim().StartsWith("#")) { 
@@ -40,4 +39,4 @@ if ($tlsc.trim().StartsWith("#")) {
     elseif ([string]::IsNullOrEmpty($tlsc)) {
     add-content -Path "c:\program files\Zabbix Agent 2\$ZabbixConfig" -value "`n$tlsca"
 } 
-write-host "Use the following PSK Key for $hostFQDN : $key  Zabbix service must still be restarted."
+write-host "Use the following PSK Key for $hostFQDN : $key  Zabbix service/host will need to be restarted."
