@@ -53,6 +53,8 @@ $downloaded = $null
            add-content -Path $ZabbixConfig -value "`n$bananassplits"
         }
 }
+Restart-Service -Name "Zabbix Agent 2" -Force
+}
 #AGENT Upgrade PROCESS HERE# OR Seperate script (think preferred)
 <#
 $CheckInstalled = Get-WmiObject -Class Win32_Product | Where-Object {$_.Name -like "zabbix agent*"}
@@ -62,9 +64,8 @@ $AgentVersion = "5.2.5"
     if ($null -ne $CheckInstalled -and $CheckInstalled.Version -lt $AgentVersion){
     Start-Process -FilePath $exe -ArgumentList $Arguments -Wait
     Restart-Service -Name 'Zabbix Agent 2'
-    }   #>
-}
-Restart-Service -Name "Zabbix Agent 2" -Force
+    }   #> 
+
 catch {
     If ($_.Exception.Response.StatusCode.value__) {
         $crap = ($_.Exception.Response.StatusCode.value__ ).ToString().Trim();
