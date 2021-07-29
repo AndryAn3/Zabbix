@@ -23,7 +23,9 @@ UserParameter=ps.scripts[*],powershell -NoProfile -ExecutionPolicy Bypass -File 
 UserParameter=raid.battery,powershell -nologo "c:\program files\Zabbix Agent 2\Scripts\get-raidbat.ps1"
 UserParameter=raid.vdisks,powershell -nologo "c:\program files\Zabbix Agent 2\Scripts\get-raidvdisks.ps1"
 UserParameter=raid.disks,powershell -nologo "c:\program files\Zabbix Agent 2\Scripts\get-raiddisks.ps1"
-UserParameter=DaysSinceLastUpdate,powershell.exe -NoProfile -ExecutionPolicy bypass -File "c:\program files\Zabbix Agent 2\Scripts\get-lastupdate.ps1" 
+UserParameter=DaysSinceLastUpdate,powershell.exe -NoProfile -ExecutionPolicy bypass -File "c:\program files\Zabbix Agent 2\Scripts\get-lastupdate.ps1"
+Plugins.SystemRun.LogRemoteCommands=1
+AllowKey=system.run[*]
 '@
 If(!(test-path $path)){ New-Item -ItemType Directory -Force -Path $path }
 If((test-path "$path\ps.xlm")) { remove-item -Path "$path\ps.xlm" -Force -Confirm:$false  }
