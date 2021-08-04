@@ -53,7 +53,7 @@ $downloaded = $null
            add-content -Path $ZabbixConfig -value "`n$bananassplits"
         }
 }
-Restart-Service -Name "Zabbix Agent 2" -Force
+#Restart-Service -Name "Zabbix Agent 2" -Force
 }
 #AGENT Upgrade PROCESS HERE# OR Seperate script (think preferred)
 <#
